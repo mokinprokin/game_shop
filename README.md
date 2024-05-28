@@ -22,7 +22,25 @@
 >>>    username=models.CharField(max_length=20)
 >>>    email=models.CharField(max_length=50)
 >>>    password=models.CharField(max_length=25)
->>> 
+>>>### 2. Users
+>>>```python
+>>> class User(models.Model):
+>>>    username=models.CharField(max_length=20)
+>>>    email=models.CharField(max_length=50)
+>>>    password=models.CharField(max_length=25)
+>>>### 3. Users
+>>>```python
+>>> class User(models.Model):
+>>>    username=models.CharField(max_length=20)
+>>>    email=models.CharField(max_length=50)
+>>>    password=models.CharField(max_length=25)
+>>>### 4. Users
+>>>```python
+>>> class User(models.Model):
+>>>    username=models.CharField(max_length=20)
+>>>    email=models.CharField(max_length=50)
+>>>    password=models.CharField(max_length=25)
+
 
 
 
