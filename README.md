@@ -22,18 +22,20 @@
 >>>    username=models.CharField(max_length=20)
 >>>    email=models.CharField(max_length=50)
 >>>    password=models.CharField(max_length=25)
->> ### 2. Users
+>> ### 2. Product_Item
 >>>```python
 >>> class Product_Item(models.Model):
 >>>    username=models.CharField(max_length=20)
 >>>    card_num=models.IntegerField()
 >>>    count=models.IntegerField()
->> ### 3. Users
+>> ### 3. Feedback_Item
 >>>```python
->>> class User(models.Model):
->>>    username=models.CharField(max_length=20)
->>>    email=models.CharField(max_length=50)
->>>    password=models.CharField(max_length=25)
+>>> class Feedback_Item(models.Model):
+>>>   username=models.CharField(max_length=20)
+>>>    header=models.TextField()
+>>>    description=models.TextField()
+>>>    rating=models.IntegerField()
+>>>    date=models.TextField()
 >> ### 4. Users
 >>>```python
 >>> class User(models.Model):
