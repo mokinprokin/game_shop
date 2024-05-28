@@ -12,6 +12,8 @@
 >>> #### Использование:
 >>> 1. **POST** запросов
 >>> 2. **GET** запросов
+>> # Javascript
+>> ![Image](https://cdn-icons-png.flaticon.com/512/4726/4726005.png)
 
   
   
