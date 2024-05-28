@@ -15,7 +15,10 @@
 >> # 3. Javascript
 >> ![Image](https://cdn-icons-png.flaticon.com/512/4726/4726005.png)
 >> # 4. Models
->> ![](https://cdn-icons-mp4.flaticon.com/512/15568/15568331.mp4)
+>> [![Watch the video](https://img.youtube.com/vi/APOPm01BVrk/hqdefault.jpg)](https://www.youtube.com/embed/APOPm01BVrk)
+
+[<img src="https://img.youtube.com/vi/APOPm01BVrk/hqdefault.jpg" width="600" height="300"
+/>](https://www.youtube.com/embed/APOPm01BVrk)
 
   
   
