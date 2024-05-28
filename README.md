@@ -7,7 +7,8 @@
 >>> 1. Циклов
 >>> 2. Условий
 >>> 3. создание переменных
->> # 2. Ajax  ![Image](https://cdn-icons-png.flaticon.com/512/1183/1183690.png)
+>> # 2. Ajax
+>> ![Image](https://cdn-icons-png.flaticon.com/512/1183/1183690.png)
 >>> #### Использование:
 >>> 1. Циклов
 >>> 2. Условий
