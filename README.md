@@ -31,17 +31,22 @@
 >> ### 3. Feedback_Item
 >>>```python
 >>> class Feedback_Item(models.Model):
->>>   username=models.CharField(max_length=20)
->>>    header=models.TextField()
->>>    description=models.TextField()
->>>    rating=models.IntegerField()
->>>    date=models.TextField()
->> ### 4. Users
+>>>     username=models.CharField(max_length=20)
+>>>     header=models.TextField()
+>>>     description=models.TextField()
+>>>     rating=models.IntegerField()
+>>>     date=models.TextField()
+>> ### 4. Custom_Item
 >>>```python
->>> class User(models.Model):
+>>> class Custom_Item(models.Model):
 >>>    username=models.CharField(max_length=20)
->>>    email=models.CharField(max_length=50)
->>>    password=models.CharField(max_length=25)
+>>>    game_genre=models.TextField()
+>>>    all_cost=models.IntegerField()
+>>>    count=models.IntegerField()
+>>>    scale_game=models.IntegerField()
+>>>    style_graphics=models.TextField()
+>>>    mechanics=models.IntegerField()
+>>>    type_graphics=models.TextField()
 
 
 
