@@ -15,7 +15,7 @@
 >> # 3. Javascript
 >> ![Image](https://cdn-icons-png.flaticon.com/512/4726/4726005.png)
 >> # 4. Models
->> ![Image](https://cdn-icons-png.flaticon.com/512/9853/9853841.png)
+>> ![Image](https://cdn-icons-png.flaticon.com/512/9853/9853806.png)
 
 
 
