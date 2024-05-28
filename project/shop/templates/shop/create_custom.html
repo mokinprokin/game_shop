@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/custom.css" %}" >
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>Создание</title>
+    <script>
+
+        function removeSpaces(text) {
+            return text.replace(/\s/g, '');
+        }               
+        function separateDigits(number) {
+            let numberStr = number.toString().split('').reverse();
+            let result = [];
+
+            numberStr.forEach((digit, index) => {
+                result.unshift(digit);
+                if ((index + 1) % 3 === 0 && index !== numberStr.length - 1) {
+                    result.unshift(' ');
+                }
+            });
+
+            return result.join('');
+        }
+        function keepOnlyDigits(str) {
+            return str.replace(/\D/g, '');
+        }
+        document.onscroll = function() {
+            var scrollPosition = window.scrollY; // Получаем позицию прокрутки по вертикали
+
+            var anchor = document.querySelector('.anchor');
+            
+            if (scrollPosition > window.innerHeight * 0.1) { // Если прокрутка больше, чем на 10vh
+                anchor.style.display = 'block';
+                anchor.style.alpha=1 // Показываем элемент
+            } else {
+                anchor.style.display = 'none';
+                anchor.style.alpha=0 // Скрываем элемент
+            }
+        };
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        function send_game_ajax(){
+            const scale_game=document.querySelector(".scale_game")
+            const all_cost=document.querySelector(".cost")
+            const style_graphichs=document.querySelector(".style_graphichs")
+            const type_graphics=document.querySelector(".type_graphics")
+
+            const game_genre=document.querySelector(".game_genre")
+
+            const platform=document.querySelector(".platform")
+
+            const multipleer=document.querySelector(".input_multipleer")
+
+            const send_platforms=document.querySelector(".send_platforms")
+
+            const plot=document.querySelector(".plot")
+
+            const text_mechanic=document.querySelector(".output_mechanic")
+            let value_mechanic=parseInt(text_mechanic.textContent)
+            $.ajax({
+                url: "/shop/custom/",
+                method: "POST",
+                data: {"game_genre":game_genre.value,"scale_game":scale_game.value/20+1,"type_graphics":type_graphics.value,"style_graphics":style_graphichs.value,"mechanics":parseInt(text_mechanic.textContent),"all_cost":keepOnlyDigits(removeSpaces(all_cost.textContent))},
+                success: function(response) {
+                    console.log("sucsess")
+                }
+            });
+            window.location.href="/shop/basket/"
+        
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const all_cost=document.querySelector(".cost")
+            let len_cost=300000;
+            const all_days=document.querySelector(".days")
+            let days=10
+
+            const scale_game=document.querySelector(".scale_game")
+
+            const style_graphichs=document.querySelector(".style_graphichs")
+            const type_graphics=document.querySelector(".type_graphics")
+            let type_cost=0
+            let type_days=0
+
+            const game_genre=document.querySelector(".game_genre")
+
+            const platform=document.querySelector(".platform")
+            let platform_cost=0
+            let platform_days=0
+
+            const multipleer=document.querySelector(".input_multipleer")
+            let multipleerChecked=false
+
+            const send_platforms=document.querySelector(".send_platforms")
+            let platforms=false
+
+            const plot=document.querySelector(".plot")
+            let plot_=false
+
+            const slider_mechanic=document.querySelector(".slider_mechanic")
+            const text_mechanic=document.querySelector(".output_mechanic")
+            
+            type_graphics.addEventListener("change",function(){
+                if(this.value=="3d"){type_cost=len_cost*0.05;type_days=40}else{type_cost=0;type_days=1}
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+            platform.addEventListener("change",function(){
+                if(platform.value=="pc"){
+                    platform_cost=0
+                    platform_days=0
+                }
+                if(platform.value=="android"){
+                    platform_cost=-len_cost*0.02
+                    platform_days-1
+                }
+                else if(platform.value=="ios"){
+                    platform_cost=len_cost*0.08
+                    platform_days=2
+                }
+                else if(platform.value=="all"){
+                    platform_cost=len_cost*0.17
+                    platform_days=15
+                }
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+            slider_mechanic.addEventListener("input", function() {
+                text_mechanic.textContent = this.value/5;
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+            style_graphichs.addEventListener('change',function(){
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+
+            scale_game.addEventListener("input",function(){
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+
+            multipleer.addEventListener("click",function(){
+                multipleerChecked=!multipleerChecked
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+
+            send_platforms.addEventListener("click",function(){
+                platforms=!platforms
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+
+            plot.addEventListener("click",function(){
+                plot_=!plot_
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+
+            game_genre.addEventListener('change',function(){
+                if(this.value=="sport"){
+                    len_cost=300000
+                    days=35
+                }
+                else if(this.value=="race"){
+                    len_cost=240000
+                    days=25
+                }
+                else if(this.value=="card_game"){
+                    len_cost=80000
+                    days=7
+                }
+                else if(this.value=="open_world"){
+                    len_cost=1140000
+                    days=80
+                }
+                else if(this.value=="battle_royale"){
+                    len_cost=850000
+                    days=53
+                }
+                else if(this.value=="fiting"){
+                    len_cost=690000
+                    days=50
+                }
+                else if(this.value="interactive_cinema"){
+                    len_cost=230000
+                    days=37
+                }
+                Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+            });
+            Update_values(len_cost,all_cost,slider_mechanic.value,scale_game.value,style_graphichs.value,multipleerChecked,platforms,plot_,type_cost,platform_cost,all_days,days,platform_days,type_days)
+
+        });
+        function Update_values(len,cost,mechanicks,scale_,style_graphich,multipleer_,platforms_,plot_,type_graphics,platform_cost,days,days_count,platform_days,type_days){
+            mechanicks_cost=20000*mechanicks/5
+            scale=(scale_/20)+1
+            graphichs=0
+            multipleer=0
+            platforms=0
+            plot=0
+            plot_?plot=len*0.15:plot=0
+            platforms_?platforms=20000:platforms=0
+            multipleer_?multipleer=len*0.15:multipleer=0
+            style_days=0
+            if(style_graphich=="cartoon"){
+                graphichs=len*0.3
+                style_days=days_count*0.13
+            }
+            else if(style_graphich=="realistic"){
+                graphichs=len*0.4
+                style_days=days_count
+            }
+            else if(style_graphich=="semi-realistic"){
+                graphichs=len*0.37
+                style_days=days_count*0.95
+            }
+            else if(style_graphich=="low_poly"){
+                graphichs=len*0.2
+                style_days=days_count*0.6
+            }
+            else if(style_graphich=="pixel"){
+                graphichs=len*0.12
+                style_days=days_count*0.5
+            }
+            else if(style_graphich=="voxel"){
+                graphichs=len*0.145
+                style_days=days_count*0.53
+            }
+            days.textContent="Cрок разработки: "+parseInt((days_count*scale)+platform_days+type_days+style_days+(((len*scale)+graphichs+mechanicks_cost+multipleer+plot+platforms+type_graphics+platform_cost)*0.000055))+" д"
+            cost.textContent="Цена: "+separateDigits(parseInt((len*scale)+graphichs+mechanicks_cost+multipleer+plot+platforms+type_graphics+platform_cost))+" ₽"
+        }
+
+        function removeSpaces(text) {
+            return text.replace(/\s/g, '');
+        }
+        function separateDigits(number) {
+            let numberStr = number.toString().split('').reverse();
+            let result = [];
+
+            numberStr.forEach((digit, index) => {
+                result.unshift(digit);
+                if ((index + 1) % 3 === 0 && index !== numberStr.length - 1) {
+                    result.unshift(' ');
+                }
+            });
+
+            return result.join('');
+        }
+        function keepOnlyDigits(str) {
+            return str.replace(/\D/g, '');
+        }    
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="display: none;" class="anchor">
+            <button onclick="scrollToTop()"><img src="   https://cdn-icons-png.flaticon.com/512/13705/13705342.png " alt=""></button>
+        </div>
+        <div class="content">
+            <header class="nav-menu">
+                <div class="typewriter">
+                    <h1>GameCraft Studio</h1>
+                </div>
+                <div class="sections">
+                    <a class="main-window" href="/shop/main/">
+                        Главная
+                    </a>
+                    <a class="info-window" href="/shop/info/">
+                        О нас
+                    </a>
+                    <a class="shop-window" href="/shop/basket/">
+                        Корзина
+                    </a>
+                    <form method="post">
+                        {%csrf_token%}
+                        <button class="quit_button" type="submit" name="quit">Выход</button>
+                    </form>  
+                </div>
+            </header>
+            <hr>
+           
+            <main class="main">
+                <div class="settings">
+                    <div class="settings_left">
+                        <ol>
+                            <li class="category" >
+                                <h1>Выберите жанр игры</h1>
+                                
+                                <select class="game_genre">
+                                    <option value="sport">Спорт</option>
+                                    <option value="race">Гонки</option>
+                                    <option value="card_game">Карточная игра</option>
+                                    <option value="open_world">Игра с открытым миром</option>
+                                    <option value="battle_royale">Королевская битва</option>
+                                    <option value="fiting">Файтинг</option>
+                                    <option value="interactive_cinema">Интерактивное кино</option>
+                                </select>
+                            </li>
+                            <li>
+                                <h1>Выберите масштаб игры</h1>
+                                <div class="slider_range">
+                                    <input class="scale_game" type="range" value="0" minlength="0" maxlength="4" step="20">
+                                    <div class="labels">
+                                        <h4>инди</h4>
+                                        <h1>>>></h1>
+                                        <h2>AAA</h2>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                               <h1>Выберите стиль графики</h1>
+                               <select class="style_graphichs">
+                                <option value="cartoon">Мультяшный</option>
+                                <option value="realistic">Реалистичный</option>
+                                <option value="semi-realistic">Семи-реалистичный</option>
+                                <option value="low_poly">Low-poly</option>
+                                <option value="pixel">Пиксельный</option>
+                                <option value="voxel">Воксельный</option>
+                               </select>
+                            </li>
+                            <li>
+                                <div class="multipleer"><h1>Мультиплеер</h1> <input class="input_multipleer" type="checkbox"></div>
+                            </li>
+                            <li>
+                                <h1>Выберите тип графики</h1>
+                                <select class="type_graphics">
+                                    <option value="2d">2д</option>
+                                    <option value="3d">3д</option>
+                                </select>
+                            </li>
+                            <li>
+                                <h1>Выберите количество игровых механик</h1>
+                                <div class="slider_range">
+                                    <input class="slider_mechanic" type="range" value="0" minlength="0" maxlength="20" step="5">
+                                    <div class="labels">
+                                        <h4>0</h4>
+                                        <h1 class="output_mechanic">0</h1>
+                                        <h4>20</h4>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="multipleer"><h1>Выложить на площадки</h1> <input class="send_platforms" type="checkbox"></div>
+                            </li>
+                            <li>
+                                <h1>Выберите платформу</h1>
+                                <select class="platform">
+                                 <option value="pc">Pc</option>
+                                 <option value="android">android</option>
+                                 <option value="ios">ios</option>
+                                 <option value="all">Все платформы</option>
+                                </select>
+                             </li>
+                            <li>
+                                <div class="multipleer"><h1>Сюжет</h1> <input class="plot" type="checkbox"></div>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="settings_right">
+                        <h1 class="cost">Цена: 100 000 ₽</h1>
+                        <h3 class="days">Срок разработки: 100 д</h3>
+                        <button type="submit" onclick="send_game_ajax()">В корзину</button>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+
+    </div>
+</body>
+</html>

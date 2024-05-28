@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/main.css" %}" >
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>Магазин</title>
+
+
+    <script>
+    function delete_feedback_admin(username,header,description){
+        $.ajax({
+            url: "/shop/main/",
+            method: "POST",
+            data: {action:"delete_feedback",username:username,header:header,description:description},
+            success: function(response) {
+                console.log(1);
+            }
+        });
+    }
+
+    function send_feedback(){
+        let header = document.querySelector("#header").value;  // Получаем значение из элемента с id "header"
+        let description = document.querySelector("#description").value;  // Получаем значение из элемента с id "description"
+        let rating = null;  // Переменная для хранения выбранного значения из radio button
+
+        const radioButtons = document.querySelectorAll('.ratio');
+
+        radioButtons.forEach(radioButton => {
+        if (radioButton.checked) {  // Проверяем, была ли кнопка выбрана
+                rating = radioButton.value;  // Присваиваем значение кнопки переменной rating
+            }
+        });
+
+
+        $.ajax({
+            url: "/shop/main/",
+            method: "POST",
+            data: {action:"send_feedback",header:header,description:description,rating:rating},
+            success: function(response) {
+                console.log(1);
+            }
+        });
+
+    }
+    function delete_feedback(element){
+        element.style.display = "none";
+    }
+    function makeDisplayNone(elem){
+            const element = document.querySelector(elem); // замените "yourElementId" на id вашего элемента
+            if (element) {
+                element.style.display = "none";
+            } else {
+                console.error('Элемент не найден!');
+            }
+    }        
+    function AddToCardButton(cardNum) {
+        $.ajax({
+            url: "/shop/main/",
+            method: "POST",
+            data: {card_num: cardNum},
+            success: function(response) {
+                console.log(cardNum);
+            }
+        });
+        const element = document.getElementById("addToBasket"); // замените "yourElementId" на id вашего элемента
+        if (element) {
+                element.style.display = "flex";
+        } else {
+                console.error('Элемент не найден!');
+        }
+    }
+    function makeDisplayFlex(element){
+        const elem=document.querySelector(element)
+        elem.style.display="flex"
+    }
+
+    function redirectToPage() {
+        window.location.href = "/shop/custom";
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+            const buttonDelete=document.querySelectorAll('#button_admin_delete')
+
+            buttonDelete.forEach(button=>{
+                button.addEventListener('click',function(){
+                    const card = button.closest('.feedback');
+                    delete_feedback(card)
+                })
+            })
+    });
+    document.onscroll = function() {
+        var scrollPosition = window.scrollY; // Получаем позицию прокрутки по вертикали
+
+        var anchor = document.querySelector('.anchor');
+        
+        if (scrollPosition > window.innerHeight * 0.4) { // Если прокрутка больше, чем на 10vh
+            anchor.style.display = 'block';
+            anchor.style.alpha=1 // Показываем элемент
+        } else {
+            anchor.style.display = 'none';
+            anchor.style.alpha=0 // Скрываем элемент
+        }
+    };
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+            block:"start"
+        });
+    }
+    
+    </script>
+</head>
+<body>
+    <div class="white">
+        <div class="squares">
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+            <div class="square">
+
+            </div>
+        </div>
+    </div>
+    <div class="grey"></div>
+
+    <div class="wrapper">
+        <div style="display: none;" class="anchor">
+            <button onclick="scrollToTop()"><img src="   https://cdn-icons-png.flaticon.com/512/13705/13705342.png " alt=""></button>
+        </div>
+        <div class="pop_up_feedback" style="display: none;">
+            <div class="pop_up">
+                <header>
+                    <h1>{{username}}, ваше мнение важно для нас!</h1>
+                    <button class="btn_close" onclick="makeDisplayNone('.pop_up_feedback')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                    </button>
+                </header>
+                <form class="feedback-form" onsubmit="send_feedback()">
+                    {%csrf_token%}
+                    <input id="header" class="input" type="text" name="header" placeholder="Заголовок" title="Не больше 40 символов!" maxlength="40" required>
+                    <textarea id="description" minlength="40" style="height: 15vh;
+                        min-height: 15vh; max-height: 15vh; max-width: 95%; min-width: 95%;" class="input" name="description" placeholder="Описание" required></textarea>
+                    <div class="rating-area">
+                        <input type="radio" checked id="star-5" class="ratio" name="rating" value="5">
+                        <label for="star-5" title="Оценка «5»"></label>	
+                        <input type="radio" id="star-4" class="ratio" name="rating" value="4">
+                        <label for="star-4" title="Оценка «4»"></label>    
+                        <input type="radio" id="star-3" class="ratio" name="rating" value="3">
+                        <label for="star-3" title="Оценка «3»"></label>  
+                        <input type="radio" id="star-2" class="ratio" name="rating" value="2">
+                        <label for="star-2" title="Оценка «2»"></label>    
+                        <input type="radio" id="star-1" class="ratio" name="rating" value="1">
+                        <label for="star-1" title="Оценка «1»"></label>
+                    </div>
+                    <button type="submit">Оставить отзыв</button>
+                </form>
+            </div>
+        </div>
+        <div class="content">
+            <header class="nav-menu">
+                <div class="typewriter">
+                    <h1 class="name">GameCraft Studio</h1>
+                </div>
+                <div class="sections">
+                    <a class="main-window" href="/shop/main/">
+                        Главная
+                    </a>
+                    <a class="info-window" href="/shop/info/">
+                        О нас
+                    </a>
+                    <a class="shop-window" href="/shop/basket/">
+                        Корзина
+                    </a>
+                    <form method="post">
+                        {%csrf_token%}
+                        <button class="quit_button" type="submit" name="quit">Выход</button>
+                    </form>                    
+                </div>
+            </header>
+            <hr>
+            <main class="main">
+                <div id="addToBasket" style="display: none;">
+                    <button class="btn_close" onclick="makeDisplayNone('#addToBasket')">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                    </button>
+                    <h1>Товар добавлен в корзину!</h1>
+                    <img src="   https://cdn-icons-png.flaticon.com/512/1043/1043472.png " alt="">
+                </div>
+                <header>
+                    <h1 class="header">
+                        Создание игр на любой вкус!
+                    </h1>
+                    <img src="   https://cdn-icons-png.flaticon.com/512/3643/3643246.png " alt="">
+                    <!-- <div class="icons">
+                        <img src="   https://cdn-icons-png.flaticon.com/512/8955/8955218.png " alt="">
+                        <img src="   https://cdn-icons-png.flaticon.com/512/5231/5231008.png " alt="">
+                        <img src="   https://cdn-icons-png.flaticon.com/512/8955/8955033.png " alt="">
+                    </div> -->
+                </header>
+                <div class="cards">
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/min_rpg.png" %});">
+                          <h1>Простая<br>Рпг Игра</h1>
+                          <span class="price">48 000 ₽ - 200 000 ₽</span>
+                          <div class="card-back">
+                            <h4 id="#ccc">
+                                🎮 Создай свою простую RPG игру и зарабатывай! Разработка доступна, а спрос высок. Окупайся быстро и делай прибыль! 
+                            </h4>
+                            <button type="button" onclick="AddToCardButton(1)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/max_rpg.png" %});">
+                          <h1>Масштабная<br>Рпг Игра</h1>
+                          <span class="price">400 000 ₽ - 8 000 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Воплотите все свои идеи, привлекайте игроков и окупайтесь быстро! <br> Неограниченные возможности для успеха. 
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(2)">В корзину</button>
+
+                          </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/yg_game.png" %});">
+                          <h1>Трендовая игра<br>Для яндекс игр</h1>
+                          <span class="price">20 000 ₽ - 50 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮  Учитывая популярность трендовых игр и востребованность качественного контента, вы быстро окупите вложения и получите прибыль!<br>Благодаря невероятно быстрым срокам создания данной игры 
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(3)">В корзину</button>
+
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/online_shooter.jpeg" %});">
+                          <h1>Простой онлайн<br>Шутер</h1>
+                          <span class="price">55 000 ₽ - 120 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Быстрая разработка и гибкие опции позволят вам окупиться в кратчайшие сроки и создать уникальный продукт, который привлечет множество игроков!
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(4)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/aaa_game.jpg" %});">
+                          <h1>AAA<br>Игра</h1>
+                          <span class="price">1 000 000 ₽ - 100 000 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Наша игра предоставляет вам безграничные возможности для творчества и развития уникального геймплея. <br> Помощь с публикацией на всех популярных платформах включена.
+                            </h4>
+
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(5)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/horror_game.jpg" %});">
+                          <h1>Хоррор<br>Игра</h1>
+                          <span class="price">58 000 ₽ - 800 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Быстрая разработка поможет вам быстро запуститься на рынке и начать зарабатывать. Погрузитесь в атмосферу ужаса и создайте свою игру страха прямо сейчас!
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(6)">В корзину</button>
+                        
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/novell_game.jpg" %});">
+                          <h1>Визуальная<br>Новелла</h1>
+                          <span class="price">20 000 ₽ - 500 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Откройте мир визуальной новеллы, воплотите свои идеи и окупитесь быстро! <br> Помощь с публикацией на всех площадках включена. 
+                            </h4>
+
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(7)">В корзину</button>
+
+                          </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/simulator_game.jpg" %});">
+                          <h1>Игра<br>Симулятор</h1>
+                          <span class="price">250 000 ₽ - 3 500 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Приобретите вашу уникальную игру-симулятор, где ваше воображение станет ключом к успеху! <br> Благодаря популярности игр-симуляторов вы быстро вернете вложенные средства и начнете приносить прибыль.
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(8)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/send_game_yg.png" %});">
+                          <h1>Выложить игру в<br>Яндекс игры</h1>
+                          <span class="price">2 000 ₽ - 10 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Поможем вам быстро и успешно выложить игру и пройти модерацию. 
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(9)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/send_steam.jpg" %});">
+                          <h1>Выложить игру в<br>Steam</h1>
+                          <span class="price">3 000 ₽ - 10 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Поможем вам быстро и успешно выложить игру и пройти модерацию. 
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(10)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/strategy_game.jpg" %});">
+                          <h1>Игра<br>Стратегия</h1>
+                          <span class="price">500 000 ₽ - 10 000 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Приобретайте готовое решение для создания коммерчески успешной игры и превратите свои амбиции в прибыль!  
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(11)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/platformer_game.jpg" %});">
+                          <h1>Игра<br>Платформер</h1>
+                          <span class="price">200 000 ₽ - 30 000 000 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Воплотите свои самые смелые идеи в игру, создайте захватывающий сюжет и уникальные игровые механики по вашему вкусу. С широкой аудиторией поклонников платформеров, окупаемость вашего проекта будет быстрой, а ваш успех в индустрии игр - несомненным!
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="AddToCardButton(12)">В корзину</button>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="cover item-b" style="background-image: url({% static "images/custom_game.jpg" %});">
+                          <h1>Свой<br>Вариант</h1>
+                          <span class="price">88 000 ₽ - 8 308 800 ₽</span>
+                          <div class="card-back">
+                            <h4>
+                                🎮 Воплотите свои самые смелые идеи в игру, создайте захватывающий сюжет и уникальные игровые механики по вашему вкусу!
+                            </h4>
+                            <button type="submit" name="toBasket" onclick="redirectToPage()">Создать</button>
+                          </div>
+                        </div>
+                    </div>
+                 
+                 
+                </div>
+
+            </main>
+            <div class="feedbacks">
+                <button type="submit" onclick="makeDisplayFlex('.pop_up_feedback')" class="add-to-card" data-back="Оставить отзыв" data-front="Отзывы"></button>
+
+                <div class="feedbacks_people">
+                    <div class="feedbacks_rating">
+                        {% if middle_rating != 0 %}
+                            <h1>{{middle_rating}}</h1>
+                            <h1>★</h1>
+                        {% else %}
+                            <h1></h1>
+                        {% endif %}
+                    </div>
+                    {%for i in feedbacks%}
+                    <div class="feedback">
+                        <header>
+                            
+                            <div class="form-feedback">
+                                {% if i.username == 'admin' %}
+                                    <img class="person-ico" src="   https://cdn-icons-png.flaticon.com/512/6024/6024190.png " alt="">
+                                {% else %}
+                                    <img class="person-ico" src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png " alt="">
+                                {% endif %}
+                                {% if i.username == username %}
+                                    <h1 class="person-name">{{i.username}} (Вы)</h1>
+                                {% elif i.username == 'admin' %}
+                                    <h1 class="person-name" style="color: rgb(153, 0, 255);font-family:'Times New Roman', Times, serif;text-shadow: -1px 2px 14px #3f3f3f;">{{i.username}} (Админ)</h1>
+                                {% else %}
+                                    <h1 class="person-name">{{i.username}}</h1>
+                                {% endif %}
+                                <h4 class="feedback-time">{{i.date}}</h4>
+                            </div>
+                            {% if i.username != 'admin' %}
+                                <div class="rating-mini">
+                                    {%for j in rang%}
+                                        {%if j < i.rating%}
+                                            <span class="active"></span>	
+                                        {%else%}
+                                            <span></span>   
+                                        {%endif%} 
+                                    {%endfor%}
+                                </div>
+                            {% endif %}
+                        </header>
+                        <main>
+                            <h1 class="header-feedback">{{i.header}}</h1>
+                            <h4 class="description-feedback">
+                                {{i.description}}
+                            </h4>
+                        </main>
+                        {%if user%}
+                        <button id="button_admin_delete" onclick="delete_feedback_admin('{{i.username|escapejs}}','{{i.header|escapejs}}','{{i.description|escapejs}}')">Удалить</button>
+
+                        {% elif i.username == username %}
+                        <button id="button_admin_delete" onclick="delete_feedback_admin('{{i.username|escapejs}}','{{i.header|escapejs}}','{{i.description|escapejs}}')">Удалить</button>
+                        {% endif %}
+                    </div>
+                    {%endfor%}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- <footer class="menu">
+    </footer> -->
+</body>
+</html>

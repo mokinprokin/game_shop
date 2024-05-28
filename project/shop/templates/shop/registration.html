@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/login.css" %}" >
+    <title>Регистрация</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <div class="info-label">
+                <header><h1>Войти аккаунт</h1></header>
+                <h3>Если вы уже зарегистрировались,то авторизуйтесь!</h3>
+                <a href="/">Вход</a>
+            </div>
+            <div class="form-label">
+                <header><h1>Добро пожаловать!</h1></header>
+                <h3>Пожалуйста зарегистрируйтесь</h3>
+                {%if error%}
+                <h3 style="color: red;">{{error}}</h3>
+                {%endif%}
+                <form method="post">
+                    {%csrf_token%}
+                    <div class="custom_input">
+                        <img class="svg_icon bi-search" src="https://cdn-icons-png.flaticon.com/512/10337/10337609.png"></img>
+                        <input class="input" type="text" name="username" placeholder="имя пользователя" minlength="4" maxlength="20" title="Не больше 20 символов!" required>
+                    </div>
+                    <div class="custom_input">
+                        <img class="svg_icon bi-search" src="https://cdn-icons-png.flaticon.com/512/5335/5335866.png"></img>
+                        <input class="input" type="email" name="email" placeholder="почта" required minlength="3" maxlength="150">
+                    </div>
+                    <div class="custom_input">
+                        <input class="input" type="password" name="password" title="Не больше 25 символов!" minlength="4" maxlength="25" placeholder="пароль" required>
+                    </div>
+                    <button type="submit">Регистрация</button>
+                </form>
+            </div>
+        </div>   
+        
+        <div class="login-root">
+            <div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
+              <div class="loginbackground box-background--white padding-top--64">
+                <div class="loginbackground-gridContainer">
+                  <div class="box-root flex-flex" style="grid-area: top / start / 8 / end;">
+                    <div class="box-root" style="background-image: linear-gradient(white 0%, rgb(247, 250, 252) 33%); flex-grow: 1;">
+                    </div>
+                  </div>
+                  <div class="box-root flex-flex" style="grid-area: 4 / 2 / auto / 5;">
+                    <div class="box-root box-divider--light-all-2 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                  </div>
+
+                  <div class="box-root flex-flex" style="grid-area: 7 / start / auto / 4;">
+                    <div class="box-root box-background--blue animationLeftRight" style="flex-grow: 1;"></div>
+                  </div>
+                  <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                    <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                  </div>
+                  <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                    <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                  </div>
+                  <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                    <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                  </div>
+                  <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                    <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                  </div>
+                  <div class="box-root flex-flex" style="grid-area: 2 / 15 / auto / end;">
+                    <div class="box-root box-background--cyan200 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+                  </div>
+
+                  <div class="box-root flex-flex" style="grid-area: 4 / 17 / auto / 20;">
+                    <div class="box-root box-background--gray100 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+                  </div>
+                  <div class="box-root flex-flex" style="grid-area: 5 / 14 / auto / 17;">
+                    <div class="box-root box-divider--light-all-2 animationRightLeft tans3s" style="flex-grow: 1;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
+                <div class="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
+                    <div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
+                        <div class="loginbackground box-background--white padding-top--64">
+                          <div class="loginbackground-gridContainer">
+                            <div class="box-root flex-flex" style="grid-area: top / start / 8 / end;">
+                              <div class="box-root" style="background-image: linear-gradient(white 0%, rgb(247, 250, 252) 33%); flex-grow: 1;">
+                              </div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 4 / 2 / auto / 5;">
+                              <div class="box-root box-divider--light-all-2 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                            </div>
+
+                            <div class="box-root flex-flex" style="grid-area: 7 / start / auto / 4;">
+                              <div class="box-root box-background--blue animationLeftRight" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                              <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                              <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                              <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                              <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 2 / 15 / auto / end;">
+                              <div class="box-root box-background--cyan200 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 3 / 14 / auto / end;">
+                              <div class="box-root box-background--blue animationRightLeft" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 4 / 17 / auto / 20;">
+                              <div class="box-root box-background--gray100 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+                            </div>
+                            <div class="box-root flex-flex" style="grid-area: 5 / 14 / auto / 17;">
+                              <div class="box-root box-divider--light-all-2 animationRightLeft tans3s" style="flex-grow: 1;"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;"></div>
+
+            
+    </div>
+</body>
+</html>

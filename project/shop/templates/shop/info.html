@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/info.css" %}" >
+    <title>Информация</title>\
+    <script>
+        document.onscroll = function() {
+            var scrollPosition = window.scrollY; // Получаем позицию прокрутки по вертикали
+
+            var anchor = document.querySelector('.anchor');
+            
+            if (scrollPosition > window.innerHeight * 0.4) { // Если прокрутка больше, чем на 10vh
+                anchor.style.display = 'block';
+                anchor.style.alpha=1 // Показываем элемент
+            } else {
+                anchor.style.display = 'none';
+                anchor.style.alpha=0 // Скрываем элемент
+            }
+        };
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+                block:"start"
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <div style="display: none;" class="anchor">
+            <button onclick="scrollToTop()"><img src="   https://cdn-icons-png.flaticon.com/512/13705/13705342.png " alt=""></button>
+        </div>
+        <div class="content">
+            <header class="nav-menu">
+                <div class="typewriter">
+                    <h1>GameCraft Studio</h1>
+                </div>
+                <div class="sections">
+                    <a class="main-window" href="/shop/main/">
+                        Главная
+                    </a>
+                    <a class="info-window" href="/shop/info/">
+                        О нас
+                    </a>
+                    <a class="shop-window" href="/shop/basket/">
+                        Корзина
+                    </a>
+                    <form method="post">
+                        {%csrf_token%}
+                        <button class="quit_button" type="submit" name="quit">Выход</button>
+                    </form>  
+                </div>
+            </header>
+            <hr>
+            <main class="main">
+                <header>
+                        <h1 class="header">
+                            В нашей комманде только проффессионалы!
+                        </h1>
+
+                        <div class="cardsPeoples">
+                            <div class="card">
+                                <div class="cover item-b" style="background-image: url({% static "images/people_1.jpg" %});">
+                                    <h1>Антохин<br>Макар</h1>
+                                    <span class="price">14 лет</span>
+                                    <div class="card-back">
+                                        <h4>
+                                            🎮 Основатель компании mimraGames, заработок на яндекс играх > 100 ₽ <br> C#,C++ разработчик
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="cover item-b" style="background-image: url({% static "images/people_2.jpg" %});">
+                                    <h1>Макар<br>Антохин</h1>
+                                    <span class="price">14 лет</span>
+                                    <div class="card-back">
+                                        <h4>
+                                            🎮 Основатель компании mimraGames, заработок на яндекс играх > 100 ₽ <br> Python,BackEnd разработчик
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="cover item-b" style="background-image: url({% static "images/people_3.jpg" %});">
+                                    <h1>Антохин<br>Макар Павлович</h1>
+                                    <span class="price">14 лет</span>
+                                    <div class="card-back">
+                                        <h4>
+                                            🎮 Основатель компании mimraGames, заработок на яндекс играх > 100 ₽ <br> Kotlin разработчик
+                                        </h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    <!-- <div class="icons">
+                        <img src="   https://cdn-icons-png.flaticon.com/512/8955/8955218.png " alt="">
+                        <img src="   https://cdn-icons-png.flaticon.com/512/5231/5231008.png " alt="">
+                        <img src="   https://cdn-icons-png.flaticon.com/512/8955/8955033.png " alt="">
+                    </div> -->
+                </header>
+                <div class="info">
+                    <h1>
+                        Нашей комманде уже целых 14 лет !
+                    </h1>
+    
+                    <h1>
+                        Наши проекты:
+                    </h1>
+                    <div class="cardsGames">
+                        <div class="card">
+                            <div class="cover item-b" style="background-image: url({% static "images/rice_up_game.png" %});">
+                                <h1>Rice Up</h1>
+                                <div class="card-back">
+                                    <h4>
+                                        🎮 Игра 2023 г, созданная для яндекс игр с оборотом более 100 ₽, также 25 место топ 100 лучших игр на яндекс играх! <br> Cрок разработки 1 мес
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="cover item-b" style="background-image: url({% static "images/lift.png" %});">
+                                <h1>The<br>Lift</h1>
+                                <div class="card-back">
+                                    <h4>
+                                        🎮 Игра 2022 г, с современной 3д графикой про выживание человека в лифте с уклоном на хоррор <br>Cрок разработки 1 мес
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="cover item-b" style="background-image: url({% static "images/battle_ship_game.jpg" %});">
+                                <h1>Морской<br>Бой</h1>
+                                <div class="card-back">
+                                    <h4>
+                                        🎮 Стратегия 2023 г, с современной и приятной графикой <br> Cрок разработки 5 мес
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="cover item-b" style="background-image: url({% static "images/online_game.png" %});">
+                                <h1>Super<br>Battle</h1>
+                                
+                                <div class="card-back">
+                                    <h4>
+                                        🎮 Онлайн игра 2023 г, с cartoon графикой и интересным геймплеем <br> Cрок разработки 2 мес
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="cover item-b" style="background-image: url({% static "images/evhalat_of_brendan.png" %});">
+                                <h1>Evhalat of<br>Brendan</h1>
+                                <div class="card-back">
+                                    <h4>
+                                        🎮 Симулятор 2023 г, с хорошей графикой и проработанным геймплеем <br> Cрок разработки 7 мес
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+            </main>
+        </div>
+
+    </div>
+    <!-- <footer class="menu">
+    </footer> -->
+</body>
+</html>

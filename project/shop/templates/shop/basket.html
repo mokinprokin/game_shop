@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "css/basket.css" %}" >
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>Корзина</title>
+    <script>
+        function removeSpaces(text) {
+            return text.replace(/\s/g, '');
+        }               
+        function makeDisplayFlex() {
+            const all_countElem=document.querySelector("#count_elements")
+            count=parseInt(keepOnlyDigits(all_countElem.textContent))
+            if(count>0){
+                const element = document.getElementById("main"); // замените "yourElementId" на id вашего элемента
+                if (element) {
+                    element.style.display = "flex";
+                } else {
+                    console.error('Элемент не найден!');
+                }
+            }
+        }
+        function makeDisplayNone(){
+            const element = document.getElementById("main"); // замените "yourElementId" на id вашего элемента
+            if (element) {
+                element.style.display = "none";
+            } else {
+                console.error('Элемент не найден!');
+            }
+        }
+        function change_count_ajax(add,card_num){
+            $.ajax({
+                url: "/shop/basket/",
+                method: "POST",
+                data: {add: add,card_num_change:card_num,action:"change"},
+                success: function(response) {
+                    console.log("sucsess");
+                }
+            });
+        }
+        function change_count_ajax_custom(add,all_cost,count){
+            $.ajax({
+                url: "/shop/basket/",
+                method: "POST",
+                data: {add: add,all_cost:parseInt(removeSpaces(keepOnlyDigits(all_cost)))/parseInt(count),action:"change_custom"},
+                success: function(response) {
+                    console.log("sucsess");
+                }
+            });
+        }
+        function delete_ajax(card_num){
+            $.ajax({
+                    url: "/shop/basket/",
+                    method: "POST",
+                    data: {card_num_delete:card_num,action:"delete"},
+                    success: function(response) {
+                        console.log("sucsess");
+                    }
+            });
+        }
+        function delete_ajax_custom(all_cost,count){
+            $.ajax({
+                    url: "/shop/basket/",
+                    method: "POST",
+                    data: {all_cost:parseInt(removeSpaces(keepOnlyDigits(all_cost)))/parseInt(count),action:"delete_custom"},
+                    success: function(response) {
+                        console.log("sucsess");
+                    }
+            });
+        }
+        function send_info_ajax(){
+            const input_tg=document.querySelector('#tg')
+            let tg=input_tg.value
+            let name=document.querySelector("#Name_user")
+            let second_name=document.querySelector("#second_name")
+            let second_name_text=second_name.value
+            let name_text=name.value
+            $.ajax({
+                    url: "/shop/basket/",
+                    method: "POST",
+                    data: {action:"send_info",telegram:tg,name:name_text,second_name:second_name_text},
+                    success: function(response) {
+                        console.log("sucsess");
+                    }
+            });
+            makeDisplayNone()
+        }
+
+        function change_count(add, element) {
+            const countElem = element.querySelector('#count_elem');
+            const costElem=element.querySelector('#cost_elem');
+            const all_costElem=document.querySelector('#all_cost');
+            if (countElem) {
+                let currentNumber = parseInt(countElem.textContent);
+                if (add == 1) {
+                    if(currentNumber<10){
+                        let startCost=parseInt(removeSpaces(costElem.textContent))/currentNumber
+                        countElem.textContent = currentNumber + 1;
+                        costElem.textContent=separateDigits(startCost*(currentNumber+1))+" ₽"
+                        cost=parseInt(removeSpaces(keepOnlyDigits(all_costElem.textContent)))+startCost
+                        all_costElem.textContent="К оплате: "+separateDigits(cost)+" ₽"
+                    }
+                } else {
+                    if (currentNumber > 1) {
+                        let startCost=parseInt(removeSpaces(costElem.textContent))/currentNumber
+                        countElem.textContent = currentNumber - 1;
+                        costElem.textContent=separateDigits(startCost*(currentNumber-1))+" ₽"
+                        cost=parseInt(removeSpaces(keepOnlyDigits(all_costElem.textContent)))-startCost
+                        all_costElem.textContent="К оплате: "+separateDigits(cost)+" ₽"
+                    }
+                    else{
+                        delete_card(element)
+                    }
+                }
+            }
+        }
+        function delete_card(element){            
+            const all_count=document.querySelector('#all_count');
+            const all_costElem=document.querySelector('#all_cost');
+            const cost_elem=element.querySelector('#cost_elem');
+            const all_countElem=document.querySelector("#count_elements")
+            cost=parseInt(removeSpaces(keepOnlyDigits(all_costElem.textContent)))-parseInt(removeSpaces(keepOnlyDigits(cost_elem.textContent)))
+            all_costElem.textContent="К оплате: "+separateDigits(cost)+" ₽"
+            if (element) {
+                element.style.display = "none";
+                count=parseInt(removeSpaces(keepOnlyDigits(all_count.textContent)))-1
+                all_count.textContent="Товаров: "+count+" шт"
+                all_countElem.textContent="Всего товаров: "+count+" шт"
+            } else {
+                console.error('Элемент не найден!');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttonsPlus = document.querySelectorAll('.button-plus');
+            const buttonsMinus = document.querySelectorAll('.button-minus');
+            const buttonDelete=document.querySelectorAll('.button-delete')
+
+            buttonsPlus.forEach(button => {
+                button.addEventListener('click', function() {
+                    const card = button.closest('.shop-card');
+                    change_count(1, card);
+                });
+            });
+
+            buttonsMinus.forEach(button => {
+                button.addEventListener('click', function() {
+                    const card = button.closest('.shop-card');
+                    change_count(0, card);
+                });
+            });
+            buttonDelete.forEach(button=>{
+                button.addEventListener('click',function(){
+                    const card = button.closest('.shop-card');
+                    delete_card(card)
+                })
+            })
+        });
+        function separateDigits(number) {
+            let numberStr = number.toString().split('').reverse();
+            let result = [];
+
+            numberStr.forEach((digit, index) => {
+                result.unshift(digit);
+                if ((index + 1) % 3 === 0 && index !== numberStr.length - 1) {
+                    result.unshift(' ');
+                }
+            });
+
+            return result.join('');
+        }
+        function keepOnlyDigits(str) {
+            return str.replace(/\D/g, '');
+        }
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content">
+            <header class="nav-menu">
+                <div class="typewriter">
+                    <h1>GameCraft Studio</h1>
+                </div>
+                <div class="sections">
+                    <a class="main-window" href="/shop/main/">
+                        Главная
+                    </a>
+                    <a class="info-window" href="/shop/info/">
+                        О нас
+                    </a>
+                    <a class="shop-window" href="/shop/basket/">
+                        Корзина
+                    </a>
+                    <form method="post">
+                        {%csrf_token%}
+                        <button class="quit_button" type="submit" name="quit">Выход</button>
+                    </form>  
+                </div>
+            </header>
+            <hr>
+            
+            <main id="main" style="display: none;">
+                <section id="left">
+                  <div id="head">
+                    <h1 id="count_elements">Всего Товаров: {{count_products}} шт</h1>
+                    <p>Выполним всё качественно!</p>
+                  </div>
+                  <h3 id="all_cost">К оплате: {{all_cost}} ₽</h3>
+                </section>
+                <section id="right">
+                <form onsubmit="send_info_ajax()">
+                    <div class="settings" style="margin: 0;">
+                        <button class="btn_close" onclick="makeDisplayNone()">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                        </button>
+                        <h1>Оплата</h1>
+                  </div>
+                    <div class="inputs">                  
+                      <label>Ваше имя:</label>
+                      <input id="Name_user" type="text" placeholder="Иван" required>
+                      <label>Ваше отчество:</label>
+                      <input id="second_name" type="text" placeholder="Иванов" required>
+                      <label>Ваш telegram:</label>
+                      <input id="tg" type="text" placeholder="@Admin" required minlength="4">
+                    </div>
+                    
+                    <button id="button-send" name="sended" type="submit">Отправить</button>
+                </form>
+                </section>
+            </main>
+            <main class="main">
+                <div class="form-area">
+                    <header>
+                        <h1 id="all_count">Товаров: {{count_products}} шт</h1>
+
+                    </header>
+                    <main class="shop-cards">
+                        {% for i in custom_data %}
+                            <div class="shop-card">
+                                <hr class="hr-card">
+                                <div class="content">
+                                    <button type="submit" name="delete" class="button-delete" onclick="delete_ajax_custom('{{i.all_cost|escapejs}}','{{i.count|escapejs}}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                                    </button>
+                                    <div class="product-info">
+                                        {% if i.game_genre == 'Интерактивное кино' %}
+                                            <img src="{% static "images/interactive_cinema.jpg" %}" class="product-ico">
+                                        {% elif i.game_genre == 'Спортивная игра' %}
+                                            <img src="{% static "images/sport_games.jpg" %}" class="product-ico">
+                                        {% elif i.game_genre == 'Гонки' %}
+                                            <img src="{% static "images/race_game.jpg" %}" class="product-ico">
+                                        {% elif i.game_genre == 'Карточная игра' %}
+                                            <img src="{% static "images/card_game.jpg" %}" class="product-ico">
+                                        {% elif i.game_genre == 'Игра с открытым миром' %}
+                                            <img src="{% static "images/open_world_game.jpg" %}" class="product-ico">
+                                        {% elif i.game_genre == 'Королевская битва' %}
+                                            <img src="{% static "images/battle_royale_game.png" %}" class="product-ico">
+                                        {% elif i.game_genre == 'Файтинг' %}
+                                            <img src="{% static "images/fiting_game.jpg" %}" class="product-ico">
+                                        {% endif %}
+
+                                        <h1>{{i.game_genre}}</h1>
+                                    </div>
+                                    <div class="count-product">
+                                        <button class="button-minus" type="submit" name="delete" onclick="change_count_ajax_custom(0,'{{i.all_cost|escapejs}}','{{i.count|escapejs}}')">
+                                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" > <path d="M4 12C4 11.4477 4.44772 11 5 11H19C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13H5C4.44772 13 4 12.5523 4 12Z"/> </svg>
+                                        </button>
+                                        <h1 id="count_elem">{{i.count}}</h1>
+                                        <button class="button-plus" type="submit" name="delete" onclick="change_count_ajax_custom(1,'{{i.all_cost|escapejs}}','{{i.count|escapejs}}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                                        </button>
+                                    </div>
+
+                                    <h1 id="cost_elem">{{i.all_cost}} ₽</h1>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {%for i in data%}
+                        <div class="shop-card">
+                            <hr class="hr-card">
+                            <div class="content">
+                                <button type="submit" name="delete" class="button-delete" onclick="delete_ajax('{{i.card_num|escapejs}}')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg>
+                                </button>
+                                <div class="product-info">
+                                    <img src="{{i.img_url}}" class="product-ico">
+                                    <h1>{{i.header}}</h1>
+                                </div>
+                                <div class="count-product">
+                                    <button class="button-minus" type="submit" name="delete" onclick="change_count_ajax(0,'{{i.card_num|escapejs}}')">
+                                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" > <path d="M4 12C4 11.4477 4.44772 11 5 11H19C19.5523 11 20 11.4477 20 12C20 12.5523 19.5523 13 19 13H5C4.44772 13 4 12.5523 4 12Z"/> </svg>
+                                    </button>
+                                    <h1 id="count_elem">{{i.count}}</h1>
+                                    <button class="button-plus" type="submit" name="delete" onclick="change_count_ajax(1,'{{i.card_num|escapejs}}')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+                                    </button>
+                                </div>
+
+                                <h1 id="cost_elem">{{i.cost}} ₽</h1>
+                            </div>
+                        </div>
+                        {%endfor%}
+                    </main>
+                    <button type="submit" onclick="makeDisplayFlex()" class="add-to-card" data-back="Оплатить" data-front="Оплатить"></button>
+                </div>
+            </main>
+
+        </div>
+
+    </div>
+</body>
+</html>
