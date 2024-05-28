@@ -2,7 +2,7 @@
 > Веб-приложение в котором можно заказать создание игр
 
 > ## Технологии в приложении:
->> # 1. Jinja  !(https://waksoft.susu.ru/wp-content/uploads/2021/04/transparant-jinja.png)
+>> # 1. Jinja  ![Image](https://waksoft.susu.ru/wp-content/uploads/2021/04/transparant-jinja.png)
 >>> #### Использование:
 >>> 1. Циклов
 >>> 2. Условий
