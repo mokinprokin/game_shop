@@ -16,11 +16,13 @@
 >> ![Image](https://cdn-icons-png.flaticon.com/512/4726/4726005.png)
 >> # 4. Models
 >> ![Image](https://cdn-icons-png.flaticon.com/512/9853/9853806.png)
->>>### 1. Users 
-```class User(models.Model):
+>>>### 1. Users
+>>>```python
+>>> class User(models.Model):
     username=models.CharField(max_length=20)
     email=models.CharField(max_length=50)
-    password=models.CharField(max_length=25)```
+    password=models.CharField(max_length=25)
+>>> ```
 
 
 
